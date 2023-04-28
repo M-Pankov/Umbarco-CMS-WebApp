@@ -1,0 +1,52 @@
+@using Umbraco.Cms.Core.Models.Blocks;
+
+@inherits UmbracoViewPage<BlockListItem>
+
+@{
+    var row = (AccordionRow)Model.Content;
+    var settings = (AccordionRowSettings)Model.Settings;
+    if (settings?.Hide ?? false) return;
+    if (row.AccordionItems == null || !row.AccordionItems.Any()) return;
+    var accordionId = "accordion-" + row.Key;
+}
+<div class="row gx-4 gx-lg-5 my-5 justify-content-center">
+    <header class="text-center">
+        <h2>@row.Title</h2>
+        <p>@row.Description</p>
+    </header>
+
+    <div class="accordion" id="@accordionId">
+        @{
+            var index = 0;
+            foreach (var rowItem in row.AccordionItems)
+            {
+                var item = (AccordionItem)rowItem.Content;
+                var itemSettings = (AccordionItemSettings)rowItem.Settings;
+                if (itemSettings.Hide) continue;
+
+                if (string.IsNullOrWhiteSpace(item.Title)
+                || item.Content == null
+                || string.IsNullOrWhiteSpace(item.Content.ToString())) continue;
+
+                var show = index == 0;
+                var headingId = accordionId + "-heading-" + index;
+                var collapseId = accordionId + "-collapse-" + index;
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="@headingId">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#@collapseId" aria-expanded="@show" aria-controls="@collapseId">
+                            @item.Title
+                        </button>
+                    </h2>
+                    <div id="@collapseId" class="accordion-collapse collapse @(show ? "show" : null)" aria-labelledby="@headingId" data-bs-parent="#@accordionId">
+                        <div class="accordion-body">
+                            @item.Content
+                        </div>
+                    </div>
+                </div>
+
+                index++;
+            }
+        }
+    </div>
+</div>

@@ -1,0 +1,51 @@
+@using Umbraco.Cms.Core.Models.Blocks;
+
+@inherits UmbracoViewPage<BlockListItem>
+
+@{
+    var row = (FeaturedItemsRow)Model.Content;
+    var settings = (FeaturedItemsSettings)Model.Settings;
+    if (settings?.Hide ?? false) return;
+    if (row.FeaturedItems == null || !row.FeaturedItems.Any()) return;
+}
+
+<div class="row gx-4 gx-lg-5 my-5 justify-content-center">
+    <header class="text-center">
+        <h2>@row.Title</h2>
+        <p>@row.Description</p>
+    </header>
+
+    @foreach (var rowItem in row.FeaturedItems)
+    {
+        var item = (ImageLinkItem)rowItem.Content;
+        var itemSettings = (ImageLinkItemSettings)rowItem.Settings;
+        if (itemSettings.Hide) continue;
+
+        <div class="card col-md-4 m-4 col-sm-12">
+
+            @if (item.Image != null)
+            {
+                <img src="@item.Image.GetCropUrl(480,380)" class="card-img-top" alt="@item.Image.Name" />
+            }
+
+            <div class="card-body">
+
+                @if (!string.IsNullOrWhiteSpace(item.Title))
+                {
+                    <h5 class="card-title">@item.Title</h5>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(item.Description))
+                {
+                    <p class="card-text">@item.Description</p>
+                }
+
+                @if (item.Link != null)
+                {
+                    <a href="@item.Link.Url" target="@item.Link.Target" class="btn btn-primary">@item.Link.Name</a>
+                }
+
+            </div>
+        </div>
+    }
+</div>

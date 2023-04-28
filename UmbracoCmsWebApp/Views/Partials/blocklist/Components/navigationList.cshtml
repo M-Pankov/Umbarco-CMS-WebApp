@@ -1,0 +1,7 @@
+@using Umbraco.Cms.Core.Models.Blocks;
+
+@inherits UmbracoViewPage<BlockListItem>
+
+    @{
+        var navitem = (NavigationItem)Model.Content;
+    }
