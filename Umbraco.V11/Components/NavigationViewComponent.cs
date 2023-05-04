@@ -1,42 +1,75 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Umbraco.Cms.Core.Configuration.Models;
 using Umbraco.Cms.Core.Models.Blocks;
 using Umbraco.Cms.Core.Models.PublishedContent;
+using Umbraco.Cms.Core.Services;
+using Umbraco.Cms.Core.Web;
 using Umbraco.Cms.Web.Common.PublishedModels;
 using Umbraco.Extensions;
+using Umbraco.V11.umbraco;
 using Umbraco.V11.umbraco.models;
 
 namespace Umbraco.V11.Components;
 
 public class SiteNavigationViewComponent : ViewComponent
 {
-    public async Task<IViewComponentResult> InvokeAsync(BlockListModel? navigation, SiteSettings? settings, IPublishedContent? logo)
+    private readonly ILocalizationService _localizationService;
+    public SiteNavigationViewComponent(ILocalizationService localizationService)
     {
+        _localizationService = localizationService;
+    }
 
-        if (navigation != null)
+    public async Task<IViewComponentResult> InvokeAsync(SiteSettings siteSettings, bool isheader, IPublishedContent content)
+    {
+        if (isheader)
         {
-            var mainNavigation = new SiteHeaderNavigationModel();
+            var header = new SiteHeaderViewModel();
+            header.CurrentPage = content;
+            header.SiteLogo = siteSettings.SiteLogoImage;
 
-            mainNavigation.SiteLogo = logo;
-
-            foreach (var item in navigation)
+            foreach (var item in siteSettings.MainNavigation)
             {
-                var navItem = (NavigationItem)item.Content;
                 var navItemSettings = (NavigationItemSettings)item.Settings;
 
-                if(navItemSettings.Hide)
+                if (navItemSettings.Hide)
                 {
                     continue;
                 }
 
-                mainNavigation.NavigationItems.Add(navItem);
+                var navItem = (NavigationItem)item.Content;
+                header.NavigationItems.Add(navItem);
             }
 
-            return View("HeaderNavigation", mainNavigation);
+            return View("HeaderNavigation", header);
         }
 
-        return View("FooterNavigation",settings);
+
+        var footer = new SiteFooterViewModel();
+
+        footer.FooterTitle = siteSettings.FooterTitle;
+        footer.FooterContent = siteSettings.FooterText;
+        footer.SocialLinks = siteSettings.FooterSocialLinks;
+
+        foreach (var item in siteSettings.FooterLinks)
+        {
+            var navItemSettings = (FooterNavigationItemSettings)item.Settings;
+
+            if (navItemSettings.Hide)
+            {
+                continue;
+            }
+
+            var navItem = (FooterNavigationItem)item.Content;
+            footer.FooterNavigationItems.Add(navItem);
+        }
+
+
+
+        return View("FooterNavigation", footer);
+
     }
 }

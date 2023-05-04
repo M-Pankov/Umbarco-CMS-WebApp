@@ -74,6 +74,14 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		public virtual string SEotitle => global::Umbraco.Cms.Web.Common.PublishedModels.SEO.GetSEotitle(this, _publishedValueFallback);
 
 		///<summary>
+		/// Footer Links
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "11.3.0+a1d6f65")]
+		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
+		[ImplementPropertyType("footerLinks")]
+		public virtual global::Umbraco.Cms.Core.Models.Blocks.BlockListModel FooterLinks => global::Umbraco.Cms.Web.Common.PublishedModels.SiteFooterProperties.GetFooterLinks(this, _publishedValueFallback);
+
+		///<summary>
 		/// Footer Social Links: Enter the social links to display in the footer
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "11.3.0+a1d6f65")]
@@ -88,6 +96,14 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
 		[ImplementPropertyType("footerText")]
 		public virtual string FooterText => global::Umbraco.Cms.Web.Common.PublishedModels.SiteFooterProperties.GetFooterText(this, _publishedValueFallback);
+
+		///<summary>
+		/// Footer Title: Add the title for footer
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "11.3.0+a1d6f65")]
+		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
+		[ImplementPropertyType("footerTitle")]
+		public virtual string FooterTitle => global::Umbraco.Cms.Web.Common.PublishedModels.SiteFooterProperties.GetFooterTitle(this, _publishedValueFallback);
 
 		///<summary>
 		/// Site Logo Image: Add Site Logo Image

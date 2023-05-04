@@ -20,7 +20,7 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 {
 	/// <summary>Carousel Row</summary>
 	[PublishedModel("carouselRow")]
-	public partial class CarouselRow : PublishedElementModel
+	public partial class CarouselRow : PublishedElementModel, IDescriptionProperty, ITitleProperty
 	{
 		// helpers
 #pragma warning disable 0109 // new is redundant
@@ -56,5 +56,21 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
 		[ImplementPropertyType("carouselItems")]
 		public virtual global::Umbraco.Cms.Core.Models.Blocks.BlockListModel CarouselItems => this.Value<global::Umbraco.Cms.Core.Models.Blocks.BlockListModel>(_publishedValueFallback, "carouselItems");
+
+		///<summary>
+		/// Description: Enter description for this item
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "11.3.0+a1d6f65")]
+		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
+		[ImplementPropertyType("description")]
+		public virtual string Description => global::Umbraco.Cms.Web.Common.PublishedModels.DescriptionProperty.GetDescription(this, _publishedValueFallback);
+
+		///<summary>
+		/// Title: Enter a title for this item
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "11.3.0+a1d6f65")]
+		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
+		[ImplementPropertyType("title")]
+		public virtual string Title => global::Umbraco.Cms.Web.Common.PublishedModels.TitleProperty.GetTitle(this, _publishedValueFallback);
 	}
 }

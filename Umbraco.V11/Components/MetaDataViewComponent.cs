@@ -12,7 +12,7 @@ public class MetaDataViewComponent : ViewComponent
 {
     public async Task<IViewComponentResult> InvokeAsync(IPublishedContent content, SiteSettings? settings)
     {
-        var metaData = new MetaDataModel();
+        var metaData = new MetaDataViewModel();
 
         metaData.Title =  content.Value<string>("sEOTitle");
         metaData.Description = content.Value<string>("sEODescription");

@@ -16,9 +16,10 @@
 		@if (!string.IsNullOrWhiteSpace(row.QuoteAuthor))
 		{
 			<figcaption>
+				- @(row.QuoteAuthor)
 				@if (!string.IsNullOrWhiteSpace(row.AuthorJobTitle))
 				{
-					@: - @(row.QuoteAuthor), <cite>@row.AuthorJobTitle</cite>
+					@:  ,<cite>@row.AuthorJobTitle</cite>
 				}
 			</figcaption>
 		}

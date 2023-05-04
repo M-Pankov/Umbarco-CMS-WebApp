@@ -1,9 +1,12 @@
+using J2N.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Globalization;
 using Umbraco.Cms.Core.DependencyInjection;
 using Umbraco.Extensions;
 
@@ -52,6 +55,21 @@ public class Startup
     /// <param name="env">The web hosting environment.</param>
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
+        var supportedCulture = new List<CultureInfo>()
+        {
+            new CultureInfo("en-US"),
+            new CultureInfo("da"),
+        };
+
+        var localizationOption = new RequestLocalizationOptions()
+        {
+            DefaultRequestCulture = new RequestCulture("en-US"),
+            SupportedCultures = supportedCulture,
+            SupportedUICultures = supportedCulture,
+        };
+
+		app.UseRequestLocalization(localizationOption);
+
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();

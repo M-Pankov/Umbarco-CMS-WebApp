@@ -1,68 +1,90 @@
-﻿@using Umbraco.V11.umbraco.models;
-@model SiteHeaderNavigationModel
+﻿@using Umbraco.Cms.Core.Services;
+@using Umbraco.Cms.Web.Common.UmbracoContext;
+@using Umbraco.V11.umbraco.models;
+@using Umbraco.V11.umbraco;
+@inject ILocalizationService LocalizationService
+@model SiteHeaderViewModel
+
+@{
+    var currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
+    var availableLanguages = LocalizationService.GetAllLanguages().Where(l => Model.CurrentPage.Cultures.Keys.Contains(l.IsoCode));
+    var currentLanguage = LanguageExtensions.GetLanguageFromIsoCode(availableLanguages, currentCulture.Name);
+}
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary" id="mainNav">
     <div class="container px-4 px-lg-5">
-        @if (Model.NavigationItems.Any(x => x.Title == "Home"))
+        @if (Model.NavigationItems.Any(x => x.Title == "Home" || x.Title == "Hjem") )
         {
-            var homeLink = Model.NavigationItems.FirstOrDefault(x => x.Title == "Home");
+            var homeLink = Model.NavigationItems.FirstOrDefault(x => x.Title == "Home" || x.Title == "Hjem");
             @:<a class="navbar-brand" href="@homeLink.Link.Url">
         }
-
-        @if(Model.SiteLogo != null)
+        @if (Model.SiteLogo != null)
         {
-            <img class="img-fluid" src="@Model.SiteLogo.Url()" width="100" height="100" />
+                        <img class="img-fluid bg-transparent"  src="@Model.SiteLogo.Url()" width="70" height="70" />
         }
 
-        @if (Model.NavigationItems.Any(x => x.Title == "Home"))
+        @if (Model.NavigationItems.Any(x => x.Title == "Home" || x.Title == "Hjem"))
         {
-            @:</a>
-
-             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                Menu
-                <i class="fas fa-bars"></i>
-            </button>
+            @:</a>              
         }
-
-
-
-           
-
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-
-
-                <ul class="navbar-nav ms-auto py-4 py-lg-0">
-                        @if (Model != null && Model.NavigationItems.Any())
+         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                            Menu
+                            <i class="fas fa-bars"></i>
+                        </button>
+        <div class="collapse navbar-collapse me-5" id="navbarResponsive">
+            <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                @if (Model.CurrentPage.Cultures.Where(c => c.Key.ToLower() != currentCulture.Name.ToLower()).Any())
+            {
+                          <li class="nav-item dropdown">
+                              <a class="nav-link px-lg-3 py-3 py-lg-4 dropdown-toggle" href="https://google.com" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        @currentLanguage
+                                  </a>
+                                  <ul class="dropdown-menu border-0" aria-labelledby="languageDropdown">
+                        @foreach (var (culture, infos) in Model.CurrentPage.Cultures.Where(c => c.Key.ToLower() != currentCulture.Name.ToLower()))
                         {
-
-                            foreach (var item in Model.NavigationItems)
-                            {
-                                var dropdownId = 0;
-
-                                var hasChildLinks = item.ChildLinks != null && item.ChildLinks.Any();
-                                if (hasChildLinks)
-                                {
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link px-lg-3 py-3 py-lg-4 dropdown-toggle" href="https://google.com" id="navbarDropdown@(dropdownId)" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            @item.Title
-                                    </a>
-                                    <ul class="dropdown-menu border-0" aria-labelledby="navbarDropdown@(dropdownId)">
-                                            @foreach (var childLink in item.ChildLinks)
-                                            {
-                                            <li><a class="dropdown-item" href="@childLink.Url" target="@childLink.Target">@childLink.Name</a></li>
-                                            }
-                                    </ul>
-                                </li>
-                                }
-
-                                if (!hasChildLinks)
-                                {
-                                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="@item.Link.Url" target="@item.Link.Target">@item.Title</a></li>
-                                }
-
-                                dropdownId++;
-                            }
+                            var language = LanguageExtensions.GetLanguageFromIsoCode(availableLanguages, culture);
+                                              <li>
+                                                  <a class="dropdown-item" href="@Model.CurrentPage.Url(culture)">@language</a>
+                                                  </li>
                         }
+                                      </ul>
+                                      </li>
+            }
+            else
+            {
+                          <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4">@currentLanguage</a></li>
+            }
+            <hr width="1" size="auto" style="0 auto" />
+                @if (Model != null && Model.NavigationItems.Any())
+                {
+                    foreach (var item in Model.NavigationItems)
+                    {
+                        var dropdownId = 0;
+
+                        var hasChildLinks = item.ChildLinks != null && item.ChildLinks.Any();
+                        if (hasChildLinks)
+                        {
+                                                                    <li class="nav-item dropdown">
+                                                                        <a class="nav-link px-lg-3 py-3 py-lg-4 dropdown-toggle" href="https://google.com" id="navbarDropdown@(dropdownId)" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    @item.Title
+                                                                        </a>
+                                                                        <ul class="dropdown-menu border-0" aria-labelledby="navbarDropdown@(dropdownId)">
+                                    @foreach (var childLink in item.ChildLinks)
+                                    {
+                                                                                            <li><a class="dropdown-item" href="@childLink.Url" target="@childLink.Target">@childLink.Name</a></li>
+                                    }
+                                                                        </ul>
+                                                                    </li>
+                        }
+
+                        if (!hasChildLinks)
+                        {
+                                                                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="@item.Link.Url" target="@item.Link.Target">@item.Title</a></li>
+                        }
+
+                        dropdownId++;
+                    }
+                }
                 </ul>
             </div>
         </div>

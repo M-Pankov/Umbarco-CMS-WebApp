@@ -9,8 +9,12 @@
     if (row.CarouselItems == null || !row.CarouselItems.Any()) return;
     var carouselId = "carousel-" + row.Key;
 }
-
+<header class="text-center">
+    <h2>@row.Title</h2>
+    <p>@row.Description</p>
+</header>
 <div id="@carouselId" class="carousel @(settings.ShowDarkMode ? "carousel-dark" : null) slide" data-bs-ride="carousel">
+
     @{
         var itemsCount = row.CarouselItems.Count;
         var itemIndex = 0;

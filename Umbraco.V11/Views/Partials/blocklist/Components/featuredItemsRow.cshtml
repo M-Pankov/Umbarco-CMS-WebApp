@@ -14,18 +14,17 @@
         <h2>@row.Title</h2>
         <p>@row.Description</p>
     </header>
-
     @foreach (var rowItem in row.FeaturedItems)
     {
         var item = (ImageLinkItem)rowItem.Content;
         var itemSettings = (ImageLinkItemSettings)rowItem.Settings;
         if (itemSettings.Hide) continue;
 
-        <div class="card rounded-4 col-md-4 m-4 col-sm-12">
+        <div class="card col-md-4 m-4 col-sm-12">
 
             @if (item.Image != null)
             {
-                <img src="@item.Image.GetCropUrl(480,380)" class="card-img-top" alt="@item.Image.Name" />
+                <img src="@item.Image.GetCropUrl(200,200)" class="card-img-top" alt="@item.Image.Name" />
             }
 
             <div class="card-body">
